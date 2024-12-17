@@ -6,12 +6,6 @@ from oradja.db.config import get_credentials, MissingCredentialsError, init_orac
 
 
 @pytest.fixture
-def mock_getpass_getpass():
-    with mock.patch('getpass.getpass', return_value="mocked_password"):
-        yield
-
-
-@pytest.fixture
 def mock_oracle_db_init_oracle_client():
     with mock.patch("oracledb.init_oracle_client") as mock_oracle_db_init_oracle_client:
         yield mock_oracle_db_init_oracle_client

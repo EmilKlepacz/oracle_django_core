@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_extensions',
     'oradja.apps.OradjaConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -128,3 +129,11 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SHELL_PLUS = "ipython"
+
+# If You need to have access to any module just after shell starts place here
+SHELL_PLUS_IMPORTS = [
+    "from oradja.utils.doc_utils import *",
+    "from oradja.shell_plus.autoreload import autoreload",
+]

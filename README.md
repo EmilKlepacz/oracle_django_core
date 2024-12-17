@@ -54,3 +54,26 @@ pip freeze > requirements.txt
 ```bash
 python manage.py env
 ```
+
+#### importing models for existing table:
+
+```bash
+python manage.py inspectdb your_table_name > models.py
+```
+
+#### running enhanced django shell:
+
+```bash
+python manage.py shell_plus
+```
+
+#### to enable autoreload in ipython shell
+```bash
+%load_ext autoreload
+%autoreload 2
+```
+
+or shorter
+```bash
+autoreload()
+```
