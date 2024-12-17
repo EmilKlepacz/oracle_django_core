@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# IntellJ IDEA
+.idea/
+*.iml
+out/
+
+# Python Byte-compiled files
+*.pyc
+*.pyo
+__pycache__/
+
+# Python Virtual environments
+venv/
