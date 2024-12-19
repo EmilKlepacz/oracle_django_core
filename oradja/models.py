@@ -1,5 +1,7 @@
 from django.db import models
 
+from oradja.utils.db_utils import next_sequence_value
+
 
 # for tables already created in database set managed = False in Meta class.
 # Django should not attempt to create, modify, or delete the table in the database.
@@ -149,3 +151,18 @@ class UmvDocument(models.Model):
     class Meta:
         managed = False
         db_table = 'umv_document'
+
+    def save(self, *args, **kwargs):
+        """
+        Ensure that the primary key uses the database sequence.
+        """
+        if not self.umvdcm:
+            self.umvdcm = next_sequence_value("umvdcm#s")
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def get_latest(cls, limit):
+        return UmvDocument.objects.all().values(
+            "umvdcm",
+            "file_name",
+            "created_dati").order_by("-created_dati")[:limit]

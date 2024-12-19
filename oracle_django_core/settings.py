@@ -134,6 +134,7 @@ SHELL_PLUS = "ipython"
 
 # If You need to have access to any module just after shell starts place here
 SHELL_PLUS_IMPORTS = [
-    "from oradja.utils.doc_utils import *",
-    "from oradja.shell_plus.autoreload import autoreload",
+    "from oradja.db.utils import *",
+    "from oradja.security.auth import *",
+    "from oradja.shell_plus.autoreload import *",
 ]

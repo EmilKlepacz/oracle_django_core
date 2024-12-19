@@ -43,6 +43,12 @@ pytest
 pytest -vv
 ```
 
+3. verbose (if any print occurrences in test for debug)
+
+```bash
+pytest -vv -s
+```
+
 #### generate requirements.txt:
 
 ```bash
@@ -68,12 +74,14 @@ python manage.py shell_plus
 ```
 
 #### to enable autoreload in ipython shell
+
 ```bash
 %load_ext autoreload
 %autoreload 2
 ```
 
 or shorter
+
 ```bash
 autoreload()
 ```
