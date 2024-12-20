@@ -49,6 +49,12 @@ pytest -vv
 pytest -vv -s
 ```
 
+4. coverage report
+
+```bash
+pytest --cov=oradja --cov-report term-missing tests
+```
+
 #### generate requirements.txt:
 
 ```bash
@@ -85,3 +91,4 @@ or shorter
 ```bash
 autoreload()
 ```
+
