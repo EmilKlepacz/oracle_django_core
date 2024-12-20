@@ -161,12 +161,17 @@ class UmvDocument(models.Model):
         super().save(*args, **kwargs)
 
     @classmethod
-    def get_latest(cls, limit=100, created_dati_from=None, created_dati_to=None):
+    def get_latest(cls, limit=100,
+                   created_dati_from=None,
+                   created_dati_to=None,
+                   fetch_file_blob=False):
 
-        queryset = cls.objects.all().values(
-            "umvdcm",
-            "file_name",
-            "created_dati")
+        columns = ["umvdcm", "file_name", "created_dati"]
+
+        if fetch_file_blob:
+            columns.append("file_data")
+
+        queryset = cls.objects.all().values(*columns)
 
         if created_dati_from and created_dati_to:
             queryset = queryset.filter(created_dati__range=(created_dati_from, created_dati_to))

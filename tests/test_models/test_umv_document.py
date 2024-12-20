@@ -1,4 +1,3 @@
-# todo : test with mock to not work with real db
 from datetime import date, timedelta
 
 import pytest
@@ -9,6 +8,12 @@ from oradja.models import UmvDocument
 def umv_document_get_latest_limit_three():
     limit = 3
     yield limit, UmvDocument.get_latest(limit)
+
+
+@pytest.fixture
+def umv_document_get_latest_limit_three_with_blob():
+    limit = 3
+    yield limit, UmvDocument.get_latest(limit, fetch_file_blob=True)
 
 
 @pytest.mark.django_db
@@ -41,6 +46,18 @@ def test_get_latest_returns_docs_with_required_columns(umv_document_get_latest_l
     _, latest_documents = umv_document_get_latest_limit_three
 
     required_columns = ["umvdcm", "file_name", "created_dati"]
+
+    for doc in latest_documents:
+        for column in required_columns:
+            assert column in doc, f"Column {column} missing in document"
+
+
+@pytest.mark.django_db
+def test_get_latest_with_default_limit_with_blob_gives_correct_number_of_documents(
+        umv_document_get_latest_limit_three_with_blob):
+    _, latest_documents = umv_document_get_latest_limit_three_with_blob
+
+    required_columns = ["umvdcm", "file_name", "created_dati", "file_data"]
 
     for doc in latest_documents:
         for column in required_columns:
