@@ -13,8 +13,10 @@ def umv_document_get_latest_limit_three():
 
 @pytest.mark.django_db
 def test_get_latest_with_default_limit_gives_correct_number_of_documents():
+    default_limit = 100
     latest_documents = UmvDocument.get_latest()
-    assert len(latest_documents) <= 100, f"Expected default limit of docs: {default_limit}, got {len(latest_documents)}"
+    assert len(
+        latest_documents) <= default_limit, f"Expected default limit of docs: {default_limit}, got {len(latest_documents)}"
 
 
 @pytest.mark.django_db
