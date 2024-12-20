@@ -161,8 +161,18 @@ class UmvDocument(models.Model):
         super().save(*args, **kwargs)
 
     @classmethod
-    def get_latest(cls, limit):
-        return UmvDocument.objects.all().values(
+    def get_latest(cls, limit=100, created_dati_from=None, created_dati_to=None):
+
+        queryset = cls.objects.all().values(
             "umvdcm",
             "file_name",
-            "created_dati").order_by("-created_dati")[:limit]
+            "created_dati")
+
+        if created_dati_from and created_dati_to:
+            queryset = queryset.filter(created_dati__range=(created_dati_from, created_dati_to))
+        elif created_dati_from:
+            queryset = queryset.filter(created_dati__gte=created_dati_from)
+        elif created_dati_to:
+            queryset = queryset.filter(created_dati__lte=created_dati_to)
+
+        return queryset.order_by("-created_dati")[:limit]
