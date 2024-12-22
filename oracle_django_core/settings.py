@@ -138,3 +138,38 @@ SHELL_PLUS_IMPORTS = [
     "from oradja.security.auth import *",
     "from oradja.shell_plus.autoreload import *",
 ]
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module}.{funcName}.{lineno}: {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {asctime}: {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": f"{os.path.abspath(os.curdir)}/debug.log",
+            "formatter": "verbose",
+        }
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console", "file"],
+            "level": "DEBUG",
+            "propagate": True,
+        }
+    },
+}
