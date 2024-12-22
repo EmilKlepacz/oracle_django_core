@@ -1,5 +1,5 @@
 import logging
-import sys
+import time
 
 from oradja.file_manager.file_manager import FileManager
 from oradja.models import UmvDocument
@@ -15,9 +15,13 @@ class DocProcessor:
         self.file_manager.new_dir()
         docs = UmvDocument.query_docs(fetch_file_blob=True, **kwargs)
 
-        logger.debug("downloading start")
+        start_time = time.time()
+        logger.info(f"Start downloading {len(docs)} files...")
+
         for doc in docs:
             file_name_unique = "_".join([str(doc["umvdcm"]), doc["file_name"].replace("/", "")])
             with open(self.file_manager.last_created_dir / file_name_unique, "xb") as file:
                 file.write(doc["file_data"])
-        logger.debug("downloading finished")
+
+        elapsed_time = time.time() - start_time
+        logger.info(f"Finished downloading {len(docs)} files in {elapsed_time:.2f} seconds.")
