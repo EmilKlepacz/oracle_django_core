@@ -161,10 +161,10 @@ class UmvDocument(models.Model):
         super().save(*args, **kwargs)
 
     @classmethod
-    def get_latest(cls, limit=100,
+    def query_docs(cls, limit=100,
                    created_dati_from=None,
                    created_dati_to=None,
-                   fetch_file_blob=False):
+                   fetch_file_blob=False, **kwargs):
 
         columns = ["umvdcm", "file_name", "created_dati"]
 
