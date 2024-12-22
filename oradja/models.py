@@ -171,7 +171,7 @@ class UmvDocument(models.Model):
         if fetch_file_blob:
             columns.append("file_data")
 
-        queryset = cls.objects.all().values(*columns)
+        queryset = cls.objects.all().exclude(file_data__isnull=True).values(*columns)
 
         if created_dati_from and created_dati_to:
             queryset = queryset.filter(created_dati__range=(created_dati_from, created_dati_to))

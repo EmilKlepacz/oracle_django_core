@@ -1,3 +1,5 @@
+import sys
+
 from oradja.file_manager.file_manager import FileManager
 from oradja.models import UmvDocument
 
@@ -11,6 +13,7 @@ class DocProcessor:
         docs = UmvDocument.query_docs(fetch_file_blob=True, **kwargs)
 
         for doc in docs:
-            file_name_unique = "_".join([str(doc["umvdcm"]), doc["file_name"]])
+            file_name_unique = "_".join([str(doc["umvdcm"]), doc["file_name"].replace("/", "")])
+            sys.stdout.flush()
             with open(self.file_manager.last_created_dir / file_name_unique, "xb") as file:
                 file.write(doc["file_data"])
