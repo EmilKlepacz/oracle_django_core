@@ -1,7 +1,8 @@
 from datetime import date, timedelta
 
 import pytest
-from oradja.models import UmvDocument
+
+from oradja.models import UmvDocument, ApiUser
 
 
 @pytest.fixture
@@ -93,3 +94,46 @@ def test_query_docs_returns_docs_in_correct_date_range_from_to_date_present():
 
     assert docs.first().get("created_dati") >= today_minus_six_months
     assert docs[len(docs) - 1]["created_dati"] <= today_minus_one_month
+
+
+@pytest.mark.django_db
+def test_query_docs_returns_correct_docs_by_ids():
+    api_user = ApiUser.objects.get(name="api")
+
+    doc1 = UmvDocument.objects.create(
+        file_name="test1",
+        file_data=b"Simple binary data",
+        created_dati=date.today(),
+        internal=False,
+        notes="This is a test document.",
+        apiusr=api_user,
+    )
+    doc1.save()
+
+    doc2 = UmvDocument.objects.create(
+        file_name="test2",
+        file_data=b"Simple binary data",
+        created_dati=date.today(),
+        internal=False,
+        notes="This is a test document.",
+        apiusr=api_user,
+    )
+    doc2.save()
+
+    doc3 = UmvDocument.objects.create(
+        file_name="test1",
+        file_data=b"Simple binary data",
+        created_dati=date.today(),
+        internal=False,
+        notes="This is a test document.",
+        apiusr=api_user,
+    )
+    doc3.save()
+
+    results = UmvDocument.query_docs(ids=[doc1.umvdcm, doc2.umvdcm, doc3.umvdcm])
+    results_list = list(results)
+
+    # Assert that each document exists in the results
+    assert any(result["umvdcm"] == doc1.umvdcm for result in results_list), f"Document {doc1.umvdcm} not found in results"
+    assert any(result["umvdcm"] == doc2.umvdcm for result in results_list), f"Document {doc2.umvdcm} not found in results"
+    assert any(result["umvdcm"] == doc3.umvdcm for result in results_list), f"Document {doc3.umvdcm} not found in results"

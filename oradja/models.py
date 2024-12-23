@@ -44,17 +44,11 @@ class ApiModule(models.Model):
 
 
 # Placeholders only for foreign keys: matches the actual database table names
-# NO NEED WHEN MODELS WILL NOT BE USED FULLY
+# NO NEED AS MODELS WILL NOT BE USED FULLY
 class VmiLead(models.Model):
     class Meta:
         managed = False
         db_table = 'vmi_leads'
-
-
-class ApiUser(models.Model):
-    class Meta:
-        managed = False
-        db_table = 'api_users'
 
 
 class VmiOrder(models.Model):
@@ -99,6 +93,57 @@ class UmvCusCampaign(models.Model):
         db_table = 'umvcus_campaign'
 
 
+class ApiDomain(models.Model):
+    class Meta:
+        managed = False
+        db_table = 'umvcus_campaign'
+
+
+class ApiUser(models.Model):
+    apiusr = models.IntegerField(db_column='apiusr#', primary_key=True)
+    created_dati = models.DateField()
+    name = models.CharField(max_length=64)
+    password = models.CharField(max_length=160, blank=True, null=True)
+    pass_chg_dati = models.DateField(blank=True, null=True)
+    pass_expired = models.BooleanField(db_comment='0 - no, 1 - yes')
+    locked = models.BooleanField(db_comment='0 - no, 1 - yes')
+    effective_dati = models.DateField(blank=True, null=True)
+    expiry_dati = models.DateField(blank=True, null=True)
+    email = models.CharField(max_length=256, blank=True, null=True)
+    last_name = models.CharField(max_length=64, blank=True, null=True)
+    first_name = models.CharField(max_length=64, blank=True, null=True)
+    phone_1 = models.CharField(max_length=4000, blank=True, null=True)
+    phone_2 = models.CharField(max_length=60, blank=True, null=True)
+    note = models.CharField(max_length=2000, blank=True, null=True)
+    authentication = models.BooleanField(db_comment='1 - standard; 2 - domain; 3 - both')
+    authorization = models.BooleanField(db_comment='1 - standard; 2 - domain; 3 - both')
+    pass_autoexp_days = models.IntegerField(blank=True, null=True,
+                                            db_comment='null - system default; 0 - never; n - in n days')
+    apiusr_by = models.ForeignKey('self', models.DO_NOTHING, db_column='apiusr#by')
+    label = models.CharField(max_length=60, blank=True, null=True, db_comment='display label if user is not a person')
+    user_type = models.BooleanField(db_comment='1 - person; 2 - system')
+    apidom = models.ForeignKey('ApiDomain', models.DO_NOTHING, db_column='apidom#', blank=True, null=True,
+                               db_comment='null - internal user')
+    auth_fail_count = models.IntegerField(blank=True, null=True)
+    auth_lock_dati = models.DateField(blank=True, null=True)
+    keep_login_log = models.BooleanField(blank=True, null=True)
+    tf_type = models.BooleanField(blank=True, null=True,
+                                  db_comment='null: login without 2-Factor-Authentication / 1: 2-F-A via SMS / 2: 2-F-A via email')
+    tf_mobile = models.CharField(max_length=256, blank=True, null=True)
+    tf_email = models.CharField(max_length=256, blank=True, null=True)
+    last_login_dati = models.DateField(blank=True, null=True)
+    is_anonymized = models.BooleanField()
+    is_password_reset = models.BooleanField(blank=True, null=True)
+    password_reset_dati = models.DateField(blank=True, null=True)
+    ngum_user_id = models.CharField(max_length=256, blank=True, null=True)
+    ngum_locked_dati = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'api_users'
+        unique_together = (('name', 'apidom'),)
+
+
 class UmvDocument(models.Model):
     umvdcm = models.BigIntegerField(db_column='umvdcm#',
                                     primary_key=True)  # Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
@@ -121,9 +166,9 @@ class UmvDocument(models.Model):
                                      null=True)  # Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
     internal = models.BooleanField(db_comment='0 - both internal and external;\n1 - internal only')
     notes = models.TextField(blank=True, null=True)
-    apiusr = models.ForeignKey('ApiUser', models.DO_NOTHING, db_column='apiusr#updated',
-                               related_name='umvdocument_apiusr_updated_set', blank=True,
-                               null=True)  # Field renamed to remove unsuitable characters.
+    apiusr_updated = models.ForeignKey('ApiUser', models.DO_NOTHING, db_column='apiusr#updated', blank=True,
+                                       null=True,
+                                       related_name='umvdocument_apiusr_updated_set')  # Field renamed to remove unsuitable characters.
     updated_dati = models.DateField(blank=True, null=True)
     source_doc_id = models.BigIntegerField(blank=True, null=True,
                                            db_comment='migrated doc id: vmileadoc#, vmiorddoc#, vmiticdoc#')
@@ -161,10 +206,13 @@ class UmvDocument(models.Model):
         super().save(*args, **kwargs)
 
     @classmethod
-    def query_docs(cls, limit=100,
+    def query_docs(cls,
+                   limit=100,
                    created_dati_from=None,
                    created_dati_to=None,
-                   fetch_file_blob=False, **kwargs):
+                   fetch_file_blob=False,
+                   ids=None,  # when id list is not empty then query by ids
+                   **kwargs):
 
         columns = ["umvdcm", "file_name", "created_dati"]
 
@@ -173,11 +221,14 @@ class UmvDocument(models.Model):
 
         queryset = cls.objects.all().exclude(file_data__isnull=True).values(*columns)
 
-        if created_dati_from and created_dati_to:
-            queryset = queryset.filter(created_dati__range=(created_dati_from, created_dati_to))
-        elif created_dati_from:
-            queryset = queryset.filter(created_dati__gte=created_dati_from)
-        elif created_dati_to:
-            queryset = queryset.filter(created_dati__lte=created_dati_to)
+        if ids:
+            queryset = queryset.filter(umvdcm__in=ids)
+        else:
+            if created_dati_from and created_dati_to:
+                queryset = queryset.filter(created_dati__range=(created_dati_from, created_dati_to))
+            elif created_dati_from:
+                queryset = queryset.filter(created_dati__gte=created_dati_from)
+            elif created_dati_to:
+                queryset = queryset.filter(created_dati__lte=created_dati_to)
 
         return queryset.order_by("-created_dati")[:limit]
