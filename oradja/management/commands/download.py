@@ -51,9 +51,16 @@ class Command(BaseCommand):
             type=int,
             help=f"Limit the number of documents to download. Default value: {_DEFAULT_LIMIT}"
         )
+        parser.add_argument(
+            "--ids",
+            default=None,
+            nargs="+",  # This means the argument can take one or more values
+            type=int,
+            help="List of document IDs"
+        )
 
     def handle(self, *args, **options):
-        file_manager = FileManager(options["root_dir_name"], options["new_dir_name"])
+        file_manager = FileManager(options["root_dir_name"],
+                                   options["new_dir_name"])
         doc_processor = DocProcessor(file_manager)
-
         doc_processor.download(**options)
