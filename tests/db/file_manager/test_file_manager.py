@@ -13,20 +13,20 @@ def test_default_dir_name_returns_correct_file_name():
 
 
 def test_new_dir_creates_directory_with_name(tmp_path):
-    custom_root = tmp_path / "test_downloads_dir"
-    file_manager = FileManager(root=custom_root)
+    root_dir_name = tmp_path / "custom_downloads"
+    new_dir_name = "new_dir"
 
-    dir_name = "test_dir"
-    file_manager.new_dir(dir_name)
+    file_manager = FileManager(root_dir_name=root_dir_name, new_dir_name="new_dir")
+    file_manager.new_dir()
 
-    created_dir = Path(custom_root) / dir_name
+    created_dir_path = Path(root_dir_name) / new_dir_name
 
-    assert created_dir.is_dir(), f"Directory {created_dir} was not created"
+    assert created_dir_path.is_dir(), f"Directory {created_dir_path} was not created"
 
 
 def test_new_dir_creates_directory_with_default_current_date_based_name(tmp_path):
-    custom_root = tmp_path / "test_downloads_dir"
-    file_manager = FileManager(root=custom_root)
+    root_dir_name = tmp_path / "custom_downloads"
+    file_manager = FileManager(root_dir_name=root_dir_name)
 
     full_path = file_manager.new_dir()  # leave argument empty to get default name in format %Y-%m-%d_%H-%M-%S
 
@@ -37,26 +37,27 @@ def test_new_dir_creates_directory_with_default_current_date_based_name(tmp_path
 
 
 def test_file_manager_creates_dir_under_custom_download_root(tmp_path):
-    custom_root = tmp_path / "test_downloads_dir"
-    file_manager = FileManager(root=custom_root)
+    root_dir_name = tmp_path / "custom_downloads"
+    new_dir_name = "new_dir"
+    file_manager = FileManager(root_dir_name=root_dir_name, new_dir_name=new_dir_name)
 
-    dir_name = "test_dir"
-    file_manager.new_dir(dir_name)
+    file_manager.new_dir()
 
-    assert (Path(os.path.abspath(os.curdir)) / custom_root / dir_name).is_dir(), \
-        f"Directory {Path(os.path.abspath(os.curdir)) / custom_root / dir_name} was not created"
+    assert (Path(os.path.abspath(os.curdir)) / root_dir_name / new_dir_name).is_dir(), \
+        f"Directory {Path(os.path.abspath(os.curdir)) / root_dir_name / new_dir_name} was not created"
 
 
 def test_file_manager_set_last_created_dir_correctly(tmp_path):
-    custom_root = tmp_path / "test_downloads_dir"
-    file_manager = FileManager(root=custom_root)
+    root_dir_name = tmp_path / "custom_downloads"
 
-    dir_name_1 = "test_dir_1"
-    file_manager.new_dir(dir_name_1)
+    new_dir_name_1 = "test_dir_1"
+    file_manager = FileManager(root_dir_name=root_dir_name, new_dir_name=new_dir_name_1)
+    file_manager.new_dir()
 
-    assert file_manager.last_created_dir == file_manager.root / dir_name_1, f"last_created_dir is not correct."
+    assert file_manager.last_created_dir == file_manager.root_dir_name / new_dir_name_1, f"last_created_dir is not correct."
 
-    dir_name_2 = "test_dir_2"
-    file_manager.new_dir(dir_name_2)
+    new_dir_name_2 = "test_dir_2"
+    file_manager = FileManager(root_dir_name=root_dir_name, new_dir_name=new_dir_name_2)
+    file_manager.new_dir()
 
-    assert file_manager.last_created_dir == file_manager.root / dir_name_2, f"last_created_dir is not correct."
+    assert file_manager.last_created_dir == file_manager.root_dir_name / new_dir_name_2, f"last_created_dir is not correct."

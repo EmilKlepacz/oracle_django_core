@@ -5,7 +5,7 @@ from django.core.management import BaseCommand, CommandError
 from oradja.db.docs.doc_processor import DocProcessor
 from oradja.file_manager.file_manager import FileManager
 
-_DEFAULT_DIR_NAME = "downloads"
+_DEFAULT_ROOT_DIR_NAME = "downloads"
 _DEFAULT_LIMIT = 3
 
 
@@ -22,16 +22,16 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "--dir_name",
+            "--root_dir_name",
             type=str,
-            default=_DEFAULT_DIR_NAME,
-            help=f"Custom directory name for downloaded docs. Default value: {_DEFAULT_DIR_NAME}"
+            default=_DEFAULT_ROOT_DIR_NAME,
+            help=f"Root directory name for downloads. Default value: {_DEFAULT_ROOT_DIR_NAME}"
         )
         parser.add_argument(
-            "--limit",
-            default=_DEFAULT_LIMIT,
-            type=int,
-            help=f"Limit the number of documents to download. Default value: {_DEFAULT_LIMIT}"
+            "--new_dir_name",
+            default=None,
+            type=str,
+            help=f"Directory for downloads set. Default value: auto generated %Y-%m-%d_%H-%M-%S"
         )
         parser.add_argument(
             "--created_dati_from",
@@ -45,9 +45,15 @@ class Command(BaseCommand):
             type=str,  # Change to string to handle date format
             help="End date to filter documents until (format: DD-MM-YYYY)"
         )
+        parser.add_argument(
+            "--limit",
+            default=_DEFAULT_LIMIT,
+            type=int,
+            help=f"Limit the number of documents to download. Default value: {_DEFAULT_LIMIT}"
+        )
 
     def handle(self, *args, **options):
-        file_manager = FileManager(options["dir_name"])
+        file_manager = FileManager(options["root_dir_name"], options["new_dir_name"])
         doc_processor = DocProcessor(file_manager)
 
         doc_processor.download(**options)
