@@ -22,10 +22,10 @@ class DocProcessor:
             file_name_unique = "_".join([str(doc["umvdcm"]), doc["file_name"].replace("/", "")])
 
             try:
-                with open(self.file_manager.last_created_dir / file_name_unique, "xb") as file:
+                with open(self.file_manager.last_created_dir_path / file_name_unique, "xb") as file:
                     file.write(doc["file_data"])
             except FileExistsError:
-                logger.info(f"'{self.file_manager.last_created_dir / file_name_unique / file_name_unique}' was skipped as already exist")
+                logger.info(f"'{self.file_manager.last_created_dir_path / file_name_unique / file_name_unique}' was skipped as already exist")
 
         elapsed_time = time.time() - start_time
         logger.info(f"Finished downloading {len(docs)} files in {elapsed_time:.2f} seconds.")

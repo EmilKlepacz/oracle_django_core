@@ -54,10 +54,10 @@ def test_file_manager_set_last_created_dir_correctly(tmp_path):
     file_manager = FileManager(root_dir_name=root_dir_name, new_dir_name=new_dir_name_1)
     file_manager.new_dir()
 
-    assert file_manager.last_created_dir == file_manager.root_dir_name / new_dir_name_1, f"last_created_dir is not correct."
+    assert file_manager.last_created_dir_path == file_manager.root_dir_path / new_dir_name_1, f"last_created_dir is not correct."
 
     new_dir_name_2 = "test_dir_2"
     file_manager = FileManager(root_dir_name=root_dir_name, new_dir_name=new_dir_name_2)
     file_manager.new_dir()
 
-    assert file_manager.last_created_dir == file_manager.root_dir_name / new_dir_name_2, f"last_created_dir is not correct."
+    assert file_manager.last_created_dir_path == file_manager.root_dir_path / new_dir_name_2, f"last_created_dir is not correct."

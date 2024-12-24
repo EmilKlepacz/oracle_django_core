@@ -9,17 +9,18 @@ def default_dir_name():
 
 class FileManager:
     def __init__(self, root_dir_name=None, new_dir_name=None):
-        self.root_dir_name = Path(os.path.abspath(os.curdir)) / root_dir_name if root_dir_name else Path(os.path.abspath(os.curdir))
-        self.last_created_dir = None
+        self.root_dir_name = root_dir_name
         self.new_dir_name = new_dir_name
+        self.root_dir_path = Path(os.path.abspath(os.curdir)) / root_dir_name if root_dir_name else Path(os.path.abspath(os.curdir))
+        self.last_created_dir_path = None
 
     def new_dir(self):
         new_dir_name = self.new_dir_name if self.new_dir_name else default_dir_name()
 
-        full_path = self.root_dir_name / new_dir_name
+        full_path = self.root_dir_path / new_dir_name
 
         os.makedirs(full_path, exist_ok=True)
 
-        self.last_created_dir = full_path
+        self.last_created_dir_path = full_path
 
         return full_path
