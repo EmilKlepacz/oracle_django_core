@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum, member
 
 
 class FileType(Enum):
@@ -25,3 +25,7 @@ class FileType(Enum):
     XLSM = "xlsm"
     XLSX = "xlsx"
     XML = "xml"
+
+    @classmethod
+    def all(cls):
+        return [file_type for file_type in cls]

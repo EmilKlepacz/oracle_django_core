@@ -4,6 +4,7 @@ import pytest
 
 from oradja.db.docs.doc_processor import DocProcessor, _download_file_name
 from oradja.file_manager.file_manager import FileManager
+from oradja.file_manager.file_type import FileType
 from oradja.models import ApiUser, UmvDocument
 
 
@@ -58,3 +59,18 @@ def test_download_success(tmp_path):
     doc2_path = root_dir_name / new_dir_name / "_".join([str(doc2.umvdcm), str(doc2.file_name)])
     assert doc1_path.is_file(), f"Missing download file: {doc1_path}"
     assert doc2_path.is_file(), f"Missing download file: {doc2_path}"
+
+
+def test_set_file_types_with_not_the_list_throws_value_error():
+    file_manager = FileManager()
+    doc_processor = DocProcessor(file_manager=file_manager)
+
+    with pytest.raises(ValueError):
+        doc_processor.file_types = FileType.PDF
+
+def test_set_file_types_with_not_file_type_enum_throws_value_error():
+    file_manager = FileManager()
+    doc_processor = DocProcessor(file_manager=file_manager)
+
+    with pytest.raises(ValueError):
+        doc_processor.file_types = "some_test_extension"
