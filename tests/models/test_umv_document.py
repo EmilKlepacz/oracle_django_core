@@ -2,6 +2,7 @@ from datetime import date, timedelta
 
 import pytest
 
+from oradja.file_manager.file_type import FileType
 from oradja.models import UmvDocument, ApiUser
 
 
@@ -134,6 +135,55 @@ def test_query_docs_returns_correct_docs_by_ids():
     results_list = list(results)
 
     # Assert that each document exists in the results
-    assert any(result["umvdcm"] == doc1.umvdcm for result in results_list), f"Document {doc1.umvdcm} not found in results"
-    assert any(result["umvdcm"] == doc2.umvdcm for result in results_list), f"Document {doc2.umvdcm} not found in results"
-    assert any(result["umvdcm"] == doc3.umvdcm for result in results_list), f"Document {doc3.umvdcm} not found in results"
+    assert any(
+        result["umvdcm"] == doc1.umvdcm for result in results_list), f"Document {doc1.umvdcm} not found in results"
+    assert any(
+        result["umvdcm"] == doc2.umvdcm for result in results_list), f"Document {doc2.umvdcm} not found in results"
+    assert any(
+        result["umvdcm"] == doc3.umvdcm for result in results_list), f"Document {doc3.umvdcm} not found in results"
+
+
+@pytest.mark.django_db
+def test_query_docs_returns_docs_with_correct_extensions():
+    api_user = ApiUser.objects.get(name="api")
+
+    doc_pdf = UmvDocument.objects.create(
+        file_name="test.pdf",
+        file_data=b"Simple binary data",
+        created_dati=date.today(),
+        internal=False,
+        notes="This is a test document.",
+        apiusr=api_user,
+    )
+    doc_pdf.save()
+
+    doc_txt = UmvDocument.objects.create(
+        file_name="test.txt",
+        file_data=b"Simple binary data",
+        created_dati=date.today(),
+        internal=False,
+        notes="This is a test document.",
+        apiusr=api_user,
+    )
+    doc_txt.save()
+
+    doc_xlsx = UmvDocument.objects.create(
+        file_name="doc.xlsx",
+        file_data=b"Simple binary data",
+        created_dati=date.today(),
+        internal=False,
+        notes="This is a test document.",
+        apiusr=api_user,
+    )
+    doc_xlsx.save()
+
+    results = UmvDocument.query_docs(ids=[doc_pdf.umvdcm, doc_txt.umvdcm, doc_xlsx.umvdcm],
+                                     file_types=[FileType.PDF, FileType.TXT])
+    results_list = list(results)
+
+    assert any(
+        result["umvdcm"] == doc_pdf.umvdcm for result in
+        results_list), f"Document {doc_pdf.umvdcm} not found in results"
+    assert any(
+        result["umvdcm"] == doc_txt.umvdcm for result in
+        results_list), f"Document {doc_txt.umvdcm} not found in results"

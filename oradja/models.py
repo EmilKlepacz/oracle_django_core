@@ -1,5 +1,11 @@
-from django.db import models
+import re
+from datetime import date
+from typing import Optional, List
 
+from django.db import models
+from django.db.models import QuerySet
+
+from oradja.file_manager.file_type import FileType
 from oradja.utils.db_utils import next_sequence_value
 
 
@@ -207,12 +213,13 @@ class UmvDocument(models.Model):
 
     @classmethod
     def query_docs(cls,
-                   limit=100,
-                   created_dati_from=None,
-                   created_dati_to=None,
-                   fetch_file_blob=False,
-                   ids=None,  # when id list is not empty then query by ids
-                   **kwargs):
+                   limit: int = 100,
+                   created_dati_from: Optional[date] = None,
+                   created_dati_to: Optional[date] = None,
+                   fetch_file_blob: bool = False,
+                   ids: Optional[List[int]] = None,  # when id list is not empty then query by ids
+                   file_types: Optional[List[FileType]] = None,
+                   **kwargs) -> QuerySet:
 
         columns = ["umvdcm", "file_name", "created_dati"]
 
@@ -230,5 +237,9 @@ class UmvDocument(models.Model):
                 queryset = queryset.filter(created_dati__gte=created_dati_from)
             elif created_dati_to:
                 queryset = queryset.filter(created_dati__lte=created_dati_to)
+
+        if file_types:
+            file_type_values = [file_type.value for file_type in file_types]
+            queryset = queryset.filter(file_name__iregex=r"\.({})$".format('|'.join(file_type_values)))
 
         return queryset.order_by("-created_dati")[:limit]

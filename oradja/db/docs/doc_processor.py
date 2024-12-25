@@ -1,5 +1,6 @@
 import logging
 import time
+from typing import Optional
 
 from oradja.file_manager.file_manager import FileManager
 from oradja.file_manager.file_type import FileType
@@ -13,7 +14,7 @@ def _download_file_name(doc: dict) -> str:
 
 
 class DocProcessor:
-    def __init__(self, file_manager: FileManager):
+    def __init__(self, file_manager: Optional[FileManager]):
         self._file_manager = file_manager
         self._file_types = None
 
@@ -33,7 +34,8 @@ class DocProcessor:
 
     def download(self, **kwargs):
         self._file_manager.new_dir()
-        docs = UmvDocument.query_docs(fetch_file_blob=True, **kwargs)
+        docs = UmvDocument.query_docs(fetch_file_blob=True,
+                                      **kwargs)
 
         start_time = time.time()
         logger.info(f"Start downloading {len(docs)} files...")

@@ -1,4 +1,4 @@
-from enum import Enum, member
+from enum import Enum
 
 
 class FileType(Enum):
@@ -29,3 +29,10 @@ class FileType(Enum):
     @classmethod
     def all(cls):
         return [file_type for file_type in cls]
+
+    @classmethod
+    def get_by_value(cls, value):
+        for file_type in cls:
+            if file_type.value == value.lower():
+                return file_type
+        raise ValueError(f"No FileType with value '{value}' found.")
