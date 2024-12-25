@@ -2,9 +2,22 @@ from datetime import date
 
 import pytest
 
-from oradja.db.docs.doc_processor import DocProcessor
+from oradja.db.docs.doc_processor import DocProcessor, _download_file_name
 from oradja.file_manager.file_manager import FileManager
 from oradja.models import ApiUser, UmvDocument
+
+
+@pytest.mark.parametrize(
+    "doc, expected",
+    [
+        ({"umvdcm": 12345, "file_name": "test_file.txt"}, "12345_test_file.txt"),
+        ({"umvdcm": 67890, "file_name": "file/with/slash"}, "67890_filewithslash"),
+        ({"umvdcm": 99999, "file_name": ""}, "99999_"),  # Edge case: empty file name
+    ],
+)
+def test_download_file_name(doc, expected):
+    result = _download_file_name(doc)
+    assert result == expected, f"Expected '{expected}', got '{result}'"
 
 
 @pytest.mark.django_db

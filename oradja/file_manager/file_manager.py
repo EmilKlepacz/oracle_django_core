@@ -2,16 +2,20 @@ import os
 from datetime import datetime
 from pathlib import Path
 
+from oradja.models import ApiModProperty
+
 
 def default_dir_name():
-    return datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    env = ApiModProperty.objects.get(name="name").value
+    return "_".join([env, datetime.now().strftime("%Y-%m-%d_%H-%M-%S")])
 
 
 class FileManager:
     def __init__(self, root_dir_name=None, new_dir_name=None):
         self.root_dir_name = root_dir_name
         self.new_dir_name = new_dir_name
-        self.root_dir_path = Path(os.path.abspath(os.curdir)) / root_dir_name if root_dir_name else Path(os.path.abspath(os.curdir))
+        self.root_dir_path = Path(os.path.abspath(os.curdir)) / root_dir_name if root_dir_name else Path(
+            os.path.abspath(os.curdir))
         self.last_created_dir_path = None
 
     def new_dir(self):

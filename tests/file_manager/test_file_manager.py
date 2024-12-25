@@ -2,14 +2,19 @@ import os
 import re
 from datetime import datetime
 from pathlib import Path
+import pytest
 
 from oradja.file_manager.file_manager import FileManager, default_dir_name
+from oradja.models import ApiModProperty
 
 
+@pytest.mark.django_db
 def test_default_dir_name_returns_correct_file_name():
+    env = ApiModProperty.objects.get(name="name").value
     name_current_date_based = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 
-    assert default_dir_name() == name_current_date_based, f"Default new dir name should be equal to {default_dir_name}"
+    assert default_dir_name() == "_".join(
+        [env, name_current_date_based]), f"Default new dir name should be equal to {default_dir_name}"
 
 
 def test_new_dir_creates_directory_with_name(tmp_path):
@@ -24,6 +29,7 @@ def test_new_dir_creates_directory_with_name(tmp_path):
     assert created_dir_path.is_dir(), f"Directory {created_dir_path} was not created"
 
 
+@pytest.mark.django_db
 def test_new_dir_creates_directory_with_default_current_date_based_name(tmp_path):
     root_dir_name = tmp_path / "custom_downloads"
     file_manager = FileManager(root_dir_name=root_dir_name)
@@ -32,8 +38,8 @@ def test_new_dir_creates_directory_with_default_current_date_based_name(tmp_path
 
     assert full_path.is_dir(), f"Directory {full_path} was not created"
 
-    date_regex = r"^\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}$"
-    assert re.match(date_regex, full_path.name), f"Directory name {full_path} does not match the expected format"
+    file_name_regex = r"^.*_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}$"
+    assert re.match(file_name_regex, full_path.name), f"Directory name {full_path} does not match the expected format"
 
 
 def test_file_manager_creates_dir_under_custom_download_root(tmp_path):
