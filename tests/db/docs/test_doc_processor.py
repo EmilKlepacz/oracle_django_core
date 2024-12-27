@@ -2,7 +2,7 @@ from datetime import date
 
 import pytest
 
-from oradja.db.docs.doc_processor import DocProcessor, _download_file_name
+from oradja.db.docs.doc_processor import DocProcessor, download_file_name
 from oradja.file_manager.file_manager import FileManager
 from oradja.file_manager.file_type import FileType
 from oradja.models import ApiUser, UmvDocument
@@ -17,7 +17,7 @@ from oradja.models import ApiUser, UmvDocument
     ],
 )
 def test_download_file_name(doc, expected):
-    result = _download_file_name(doc)
+    result = download_file_name(doc)
     assert result == expected, f"Expected '{expected}', got '{result}'"
 
 

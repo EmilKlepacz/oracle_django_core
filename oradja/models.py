@@ -14,6 +14,94 @@ from oradja.utils.db_utils import next_sequence_value
 # Django that it should not attempt to create, modify, or delete the table in the database.
 # Use for ORM only!!!
 
+# Placeholders only for foreign keys: matches the actual database table names
+# NO NEED AS MODELS WILL NOT BE USED FULLY
+
+######## BEGIN: models not complete, use for placeholder for fk in other tables########
+class VmiLead(models.Model):
+    vmilea = models.BigIntegerField(db_column='vmilea#',
+                                    primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'vmi_leads'
+
+
+class VmiOrder(models.Model):
+    vmiord = models.BigIntegerField(db_column='vmiord#',
+                                    primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'vmi_orders'
+
+
+class UmvCustomer(models.Model):
+    umvcus = models.BigIntegerField(db_column='umvcus#',
+                                    primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'umv_customers'
+
+
+class VmiLeaConAddress(models.Model):
+    vmileaconadr = models.BigIntegerField(db_column='vmileaconadr#',
+                                          primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'vmileacon_addresses'
+
+
+class VmiTicket(models.Model):
+    vmitic = models.BigIntegerField(db_column='vmitic#',
+                                    primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'vmi_tickets'
+
+
+class UmvCusWalkSheet(models.Model):
+    umvcuswks = models.BigIntegerField(db_column='umvcuswks#',
+                                       primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'umvcus_walksheets'
+
+
+class UmvCusContact(models.Model):
+    umvcuscon = models.BigIntegerField(db_column='umvcuscon#',
+                                       primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'umvcus_contacts'
+
+
+class UmvCusCampaign(models.Model):
+    umvcuscam = models.BigIntegerField(db_column='umvcuscam#',
+                                       primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'umvcus_campaign'
+
+
+class ApiDomain(models.Model):
+    apidom = models.BigIntegerField(db_column='apidomd#',
+                                    primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'umvcus_campaign'
+
+
+######## END: models not complete, use for placeholder for fk in other tables########
+
+
 class ApiModProperty(models.Model):
     apimodpro = models.IntegerField(db_column='apimodpro#',
                                     primary_key=True)
@@ -47,62 +135,6 @@ class ApiModule(models.Model):
         managed = False
         db_table = 'api_modules'
         unique_together = (('path', 'id'), ('path', 'name'),)
-
-
-# Placeholders only for foreign keys: matches the actual database table names
-# NO NEED AS MODELS WILL NOT BE USED FULLY
-class VmiLead(models.Model):
-    class Meta:
-        managed = False
-        db_table = 'vmi_leads'
-
-
-class VmiOrder(models.Model):
-    class Meta:
-        managed = False
-        db_table = 'vmi_orders'
-
-
-class UmvCustomer(models.Model):
-    class Meta:
-        managed = False
-        db_table = 'umv_customers'
-
-
-class VmiLeaConAddress(models.Model):
-    class Meta:
-        managed = False
-        db_table = 'vmileacon_addresses'
-
-
-class VmiTicket(models.Model):
-    class Meta:
-        managed = False
-        db_table = 'vmi_tickets'
-
-
-class UmvCusWalkSheet(models.Model):
-    class Meta:
-        managed = False
-        db_table = 'umvcus_walksheets'
-
-
-class UmvCusContact(models.Model):
-    class Meta:
-        managed = False
-        db_table = 'umvcus_contacts'
-
-
-class UmvCusCampaign(models.Model):
-    class Meta:
-        managed = False
-        db_table = 'umvcus_campaign'
-
-
-class ApiDomain(models.Model):
-    class Meta:
-        managed = False
-        db_table = 'umvcus_campaign'
 
 
 class ApiUser(models.Model):

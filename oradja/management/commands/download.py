@@ -1,5 +1,4 @@
 from datetime import datetime, date
-from typing import List, Optional
 
 from django.core.management import BaseCommand, CommandError
 

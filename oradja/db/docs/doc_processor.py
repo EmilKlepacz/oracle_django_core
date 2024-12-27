@@ -9,7 +9,7 @@ from oradja.models import UmvDocument
 logger = logging.getLogger("django")
 
 
-def _download_file_name(doc: dict) -> str:
+def download_file_name(doc: dict) -> str:
     return "_".join([str(doc["umvdcm"]), doc["file_name"].replace("/", "")])
 
 
@@ -41,7 +41,7 @@ class DocProcessor:
         logger.info(f"Start downloading {len(docs)} files...")
 
         for doc in docs:
-            download_file_path = self._file_manager.last_created_dir_path / _download_file_name(doc)
+            download_file_path = self._file_manager.last_created_dir_path / download_file_name(doc)
             try:
                 with open(download_file_path, "xb") as file:
                     file.write(doc["file_data"])

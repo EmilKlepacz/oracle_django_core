@@ -33,8 +33,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django_extensions',
+    'rest_framework',
     'oradja.apps.OradjaConfig',
+    'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -134,7 +135,7 @@ SHELL_PLUS = "ipython"
 
 # If You need to have access to any module just after shell starts place here
 SHELL_PLUS_IMPORTS = [
-    "from oradja.db.utils import *",
+    "from oradja.utils import *",
     "from oradja.security.auth import *",
     "from oradja.shell_plus.autoreload import *",
 ]
@@ -154,12 +155,12 @@ LOGGING = {
     },
     "handlers": {
         "console": {
-            "level": "DEBUG",
+            "level": "INFO",
             "class": "logging.StreamHandler",
             "formatter": "simple",
         },
         "file": {
-            "level": "DEBUG",
+            "level": "INFO",
             "class": "logging.FileHandler",
             "filename": f"{os.path.abspath(os.curdir)}/debug.log",
             "formatter": "verbose",
@@ -168,8 +169,14 @@ LOGGING = {
     "loggers": {
         "django": {
             "handlers": ["console", "file"],
-            "level": "DEBUG",
+            "level": "INFO",
             "propagate": True,
         }
     },
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
 }

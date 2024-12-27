@@ -1,6 +1,6 @@
 # oracle_django_core
 
-#### setting up the credentials and OCI driver:
+### setting up the credentials and OCI driver:
 
 env variables:
 
@@ -23,13 +23,13 @@ export ORADJA_OCI="/dummy/path/to/instantclient_23_3"
 export ORADJA_SECRET_KEY="to_retrieve_secure_key_contact_the_owner"
 ```
 
-#### setting SECRET_KEY:
+### setting SECRET_KEY:
 
 ```bash
 export ORADJA_SECRET_KEY="to_get_secure_key_contact_the_owner"
 ```
 
-#### running tests:
+### running tests:
 
 1. concise output:
 
@@ -55,31 +55,31 @@ pytest -vv -s
 pytest --cov=oradja --cov-report term-missing tests
 ```
 
-#### generate requirements.txt:
+### generate requirements.txt:
 
 ```bash
 pip freeze > requirements.txt 
 ```
 
-#### running custom management command:
+### running custom management command example:
 
 ```bash
 python manage.py env
 ```
 
-#### importing models for existing table:
+### generate model for existing table:
 
 ```bash
 python manage.py inspectdb your_table_name > models.py
 ```
 
-#### running enhanced django shell:
+### running enhanced django shell:
 
 ```bash
 python manage.py shell_plus
 ```
 
-#### to enable autoreload in ipython shell
+### enable autoreload in ipython shell:
 
 ```bash
 %load_ext autoreload
@@ -92,3 +92,14 @@ or shorter
 autoreload()
 ```
 
+### run development server:
+
+```bash
+python manage.py runserver
+```
+
+### test rest api example
+
+```bash
+curl http://127.0.0.1:8000/api/umvdocuments/ | json_pp
+```
