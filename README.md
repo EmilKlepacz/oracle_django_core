@@ -32,20 +32,6 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### activating virtual environment and install dependencies:
-
-```bash
-python -m venv venv
-```
-
-```bash
-source venv/bin/activate
-```
-
-```bash
-pip install -r requirements.txt
-```
-
 ### verify installation:
 
 ```bash
