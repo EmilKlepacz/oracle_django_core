@@ -1,6 +1,6 @@
 # oracle_django_core
 
-### setting up the db credentials and OCI driver:
+### setting up db credentials and OCI driver:
 
 ```bash
 export ORADJA_USER="dummy_user"
@@ -11,10 +11,45 @@ export ORADJA_PORT="1521"
 export ORADJA_OCI="/dummy/path/to/instantclient_23_3"
 ```
 
-### setting SECRET_KEY:
+### setting up SECRET_KEY:
 
 ```bash
 export ORADJA_SECRET_KEY="to_get_secure_key_contact_the_owner"
+```
+
+### activating virtual environment and install dependencies:
+
+```bash
+python -m venv venv
+```
+
+```bash
+source venv/bin/activate
+# for Windows: venv\Scripts\activate 
+```
+
+```bash
+pip install -r requirements.txt
+```
+
+### activating virtual environment and install dependencies:
+
+```bash
+python -m venv venv
+```
+
+```bash
+source venv/bin/activate
+```
+
+```bash
+pip install -r requirements.txt
+```
+
+### verify installation:
+
+```bash
+pip list
 ```
 
 ### running tests:
@@ -53,6 +88,9 @@ pip freeze > requirements.txt
 
 ```bash
 python manage.py env
+```
+
+```bash
 python manage.py download --created_dati_from 01-01-2024 --created_dati_to 31-12-2024 --file_types pdf png jpg --limit 10
 ```
 
@@ -75,7 +113,7 @@ python manage.py shell_plus
 %autoreload 2
 ```
 
-or shorter
+or shorter:
 
 ```bash
 autoreload()
@@ -91,6 +129,12 @@ python manage.py runserver
 
 ```bash
 curl "http://127.0.0.1:8000/api/umvdocuments/" | json_pp
+```
+
+```bash
 curl "http://127.0.0.1:8000/api/umvdocuments/search/?ids=10653,10654" | json_pp
+```
+
+```bash
 curl "http://127.0.0.1:8000/api/umvdocuments/search/?limit=20&created_dati_from=01-01-2023&created_dati_to=01-12-2024&file_types=pdf,png,jpg" | json_p
 ```
