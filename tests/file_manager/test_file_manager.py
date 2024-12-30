@@ -1,11 +1,10 @@
 import os
 import re
-from datetime import datetime
 from pathlib import Path
+
 import pytest
 
 from oradja.file_manager.file_manager import FileManager, default_dir_name
-from oradja.models import ApiModProperty
 
 
 @pytest.mark.django_db

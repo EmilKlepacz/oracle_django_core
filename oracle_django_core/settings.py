@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'oracle_django_core.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 init_oracle_client()
-credentials = get_credentials();
+credentials = get_credentials()
 
 DATABASES = {
     "default": {
