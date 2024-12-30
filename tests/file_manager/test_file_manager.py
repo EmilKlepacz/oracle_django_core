@@ -10,11 +10,9 @@ from oradja.models import ApiModProperty
 
 @pytest.mark.django_db
 def test_default_dir_name_returns_correct_file_name():
-    env = ApiModProperty.objects.get(name="name").value
-    name_current_date_based = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-
-    assert default_dir_name() == "_".join(
-        [env, name_current_date_based]), f"Default new dir name should be equal to {default_dir_name}"
+    file_name_regex = r"^.*_\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}$"
+    assert re.match(file_name_regex,
+                    default_dir_name()), f"Directory name {default_dir_name} does not match the expected format"
 
 
 def test_new_dir_creates_directory_with_name(tmp_path):

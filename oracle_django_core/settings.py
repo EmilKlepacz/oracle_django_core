@@ -133,7 +133,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SHELL_PLUS = "ipython"
 
-# If You need to have access to any module just after shell starts place here
+# If You need to have access to any module just after shell starts place the module here:
 SHELL_PLUS_IMPORTS = [
     "from oradja.utils import *",
     "from oradja.security.auth import *",

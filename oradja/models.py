@@ -244,21 +244,24 @@ class UmvDocument(models.Model):
         super().save(*args, **kwargs)
 
     @classmethod
-    def query_docs(cls,
-                   limit: int = 100,
-                   created_dati_from: Optional[date] = None,
-                   created_dati_to: Optional[date] = None,
-                   fetch_file_blob: bool = False,
-                   ids: Optional[List[int]] = None,  # when id list is not empty then query by ids
-                   file_types: Optional[List[FileType]] = None,
-                   **kwargs) -> QuerySet:
+    def search_docs(cls,
+                    limit: Optional[int] = 100,
+                    created_dati_from: Optional[date] = None,
+                    created_dati_to: Optional[date] = None,
+                    fetch_file_blob: bool = False,
+                    ids: Optional[List[int]] = None,  # when id list is not empty then query by ids
+                    file_types: Optional[List[FileType]] = None,
+                    **kwargs) -> QuerySet:
+
+        if limit is None or limit <= 0:
+            limit = 100
 
         columns = ["umvdcm", "file_name", "created_dati"]
 
         if fetch_file_blob:
             columns.append("file_data")
 
-        queryset = cls.objects.all().exclude(file_data__isnull=True).values(*columns)
+        queryset = cls.objects.all().exclude(file_data__isnull=True).only(*columns)
 
         if ids:
             queryset = queryset.filter(umvdcm__in=ids)

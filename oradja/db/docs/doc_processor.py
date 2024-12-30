@@ -9,8 +9,8 @@ from oradja.models import UmvDocument
 logger = logging.getLogger("django")
 
 
-def download_file_name(doc: dict) -> str:
-    return "_".join([str(doc["umvdcm"]), doc["file_name"].replace("/", "")])
+def download_file_name(doc: UmvDocument) -> str:
+    return "_".join([str(doc.umvdcm), doc.file_name.replace("/", "")])
 
 
 class DocProcessor:
@@ -34,8 +34,8 @@ class DocProcessor:
 
     def download(self, **kwargs):
         self._file_manager.new_dir()
-        docs = UmvDocument.query_docs(fetch_file_blob=True,
-                                      **kwargs)
+        docs = UmvDocument.search_docs(fetch_file_blob=True,
+                                       **kwargs)
 
         start_time = time.time()
         logger.info(f"Start downloading {len(docs)} files...")
@@ -44,7 +44,7 @@ class DocProcessor:
             download_file_path = self._file_manager.last_created_dir_path / download_file_name(doc)
             try:
                 with open(download_file_path, "xb") as file:
-                    file.write(doc["file_data"])
+                    file.write(doc.file_data)
             except FileExistsError:
                 logger.info(
                     f"'{download_file_path}' was skipped as already exist")

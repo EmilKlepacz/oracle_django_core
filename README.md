@@ -1,17 +1,6 @@
 # oracle_django_core
 
-### setting up the credentials and OCI driver:
-
-env variables:
-
-- <b>ORADJA_USER</b>
-- <b>ORADJA_NAME</b>
-- <b>ORADJA_PASSWORD</b>
-- <b>ORADJA_HOST</b>
-- <b>ORADJA_PORT</b>
-- <b>ORADJA_OCI</b>
-
-need to be set for db connection. <br>
+### setting up the db credentials and OCI driver:
 
 ```bash
 export ORADJA_USER="dummy_user"
@@ -20,7 +9,6 @@ export ORADJA_PASSWORD="dummy_password"
 export ORADJA_HOST="dummy.host.com"
 export ORADJA_PORT="1521"
 export ORADJA_OCI="/dummy/path/to/instantclient_23_3"
-export ORADJA_SECRET_KEY="to_retrieve_secure_key_contact_the_owner"
 ```
 
 ### setting SECRET_KEY:
@@ -43,43 +31,44 @@ pytest
 pytest -vv
 ```
 
-3. verbose (if any print occurrences in test for debug)
+3. verbose [if any print() occurrences in test for debug]:
 
 ```bash
 pytest -vv -s
 ```
 
-4. coverage report
+4. coverage report:
 
 ```bash
 pytest --cov=oradja --cov-report term-missing tests
 ```
 
-### generate requirements.txt:
+### generating requirements.txt:
 
 ```bash
 pip freeze > requirements.txt 
 ```
 
-### running custom management command example:
+### running custom management commands examples:
 
 ```bash
 python manage.py env
+python manage.py download --created_dati_from 01-01-2024 --created_dati_to 31-12-2024 --file_types pdf png jpg --limit 10
 ```
 
-### generate model for existing table:
+### generating model for existing table:
 
 ```bash
 python manage.py inspectdb your_table_name > models.py
 ```
 
-### running enhanced django shell:
+### running Django shell with autoloading of the apps database models:
 
 ```bash
 python manage.py shell_plus
 ```
 
-### enable autoreload in ipython shell:
+### enabling autoreload in ipython shell:
 
 ```bash
 %load_ext autoreload
@@ -92,14 +81,16 @@ or shorter
 autoreload()
 ```
 
-### run development server:
+### running development server:
 
 ```bash
 python manage.py runserver
 ```
 
-### test rest api example
+### testing rest api examples:
 
 ```bash
-curl http://127.0.0.1:8000/api/umvdocuments/ | json_pp
+curl "http://127.0.0.1:8000/api/umvdocuments/" | json_pp
+curl "http://127.0.0.1:8000/api/umvdocuments/search/?ids=10653,10654" | json_pp
+curl "http://127.0.0.1:8000/api/umvdocuments/search/?limit=20&created_dati_from=01-01-2023&created_dati_to=01-12-2024&file_types=pdf,png,jpg" | json_p
 ```

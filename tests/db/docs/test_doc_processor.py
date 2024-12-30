@@ -11,9 +11,9 @@ from oradja.models import ApiUser, UmvDocument
 @pytest.mark.parametrize(
     "doc, expected",
     [
-        ({"umvdcm": 12345, "file_name": "test_file.txt"}, "12345_test_file.txt"),
-        ({"umvdcm": 67890, "file_name": "file/with/slash"}, "67890_filewithslash"),
-        ({"umvdcm": 99999, "file_name": ""}, "99999_"),  # Edge case: empty file name
+        (UmvDocument(umvdcm=12345, file_name="test_file.txt"), "12345_test_file.txt"),
+        (UmvDocument(umvdcm=67890, file_name="file/with/slash"), "67890_filewithslash"),
+        (UmvDocument(umvdcm=99999, file_name=""), "99999_"),  # Edge case: empty file name
     ],
 )
 def test_download_file_name(doc, expected):
@@ -67,6 +67,7 @@ def test_set_file_types_with_not_the_list_throws_value_error():
 
     with pytest.raises(ValueError):
         doc_processor.file_types = FileType.PDF
+
 
 def test_set_file_types_with_not_file_type_enum_throws_value_error():
     file_manager = FileManager()
