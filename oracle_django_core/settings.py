@@ -177,6 +177,9 @@ LOGGING = {
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        # uncomment when You want to relax permissions for testing (for example to test API without authenticate)
+        'rest_framework.permissions.AllowAny'
+
+        # 'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }

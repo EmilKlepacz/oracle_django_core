@@ -15,8 +15,13 @@ urlpatterns = [
         name="detail"
     ),
     path(
+        "umvdocuments/search-url/",
+        views.UmvDocumentSearchUrlView.as_view(),
+        name="search"
+    ),
+    path(
         "umvdocuments/search/",
         views.UmvDocumentSearchView.as_view(),
         name="search"
-    )
+    ),
 ]

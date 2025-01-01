@@ -114,13 +114,26 @@ python manage.py runserver
 ### testing rest api examples:
 
 ```bash
-curl "http://127.0.0.1:8000/api/umvdocuments/" | json_pp
+curl -X GET "http://127.0.0.1:8000/api/umvdocuments/" | json_pp
 ```
 
 ```bash
-curl "http://127.0.0.1:8000/api/umvdocuments/search/?ids=10653,10654" | json_pp
+curl -X POST "http://127.0.0.1:8000/api/umvdocuments/search/" \
+-H "Content-Type: application/json" \
+-d '{
+    "created_dati_from": "2023-01-01",
+    "created_dati_to": "2024-12-01",
+    "limit": 10,
+    "file_types": ["pdf", "png", "jpg"]
+}' | json_pp
+
+```
+
+or when params are passed with urls:
+```bash
+curl -X GET "http://127.0.0.1:8000/api/umvdocuments/search-url/?ids=10653,10654" | json_pp
 ```
 
 ```bash
-curl "http://127.0.0.1:8000/api/umvdocuments/search/?limit=20&created_dati_from=01-01-2023&created_dati_to=01-12-2024&file_types=pdf,png,jpg" | json_p
+curl -X GET "http://127.0.0.1:8000/api/umvdocuments/search-url/?limit=20&created_dati_from=01-01-2023&created_dati_to=01-12-2024&file_types=pdf,png,jpg" | json_pp
 ```
