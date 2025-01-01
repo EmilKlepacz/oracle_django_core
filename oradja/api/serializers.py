@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from oradja.db.docs.doc_processor import download_file_name
+from oradja.file_manager.file_type import FileType
 from oradja.models import UmvDocument, ApiUser
 
 
@@ -42,6 +43,22 @@ class UmvDocumentSearchSerializer(serializers.Serializer):
         help_text="A list of file types to filter documents (e.g., pdf, txt)."
     )
 
+    def validate(self, attrs):
+        file_types = attrs.get("file_types")
+        created_dati_from = attrs.get("created_dati_from")
+        created_dati_to = attrs.get("created_dati_to")
+
+        for file_type in file_types:
+            try:
+                file_type_enum = FileType.get_by_value(value=file_type)
+            except ValueError:
+                raise serializers.ValidationError(detail=f"Invalid file type: {file_type}")
+
+        if created_dati_from and created_dati_to and created_dati_from > created_dati_to:
+            raise serializers.ValidationError(detail="Dates range is incorrect.")
+
+        return attrs
+
     def create(self, validated_data):
         """Dummy create method to satisfy DRF requirements."""
         return validated_data
@@ -50,7 +67,9 @@ class UmvDocumentSearchSerializer(serializers.Serializer):
         """Dummy update method to satisfy DRF requirements."""
         return validated_data
 
+
 from rest_framework import serializers
+
 
 class UmvDocumentOutputSerializer(serializers.Serializer):
     umvdcm = serializers.IntegerField()
