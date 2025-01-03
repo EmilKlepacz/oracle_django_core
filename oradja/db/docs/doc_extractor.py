@@ -13,25 +13,26 @@ class DocExtractor:
             raise ValueError(f'No pymupdf support for {file_type.name}')
         self.file_type = file_type
 
-    def extract_to_json(self, doc_path: Path) -> dict:
-        file_handlers: Dict[FileType, Callable[[Path], dict]] = {
-            FileType.PDF: self.handle_pdf,
-            FileType.BMP: self.handle_bmp,
-            FileType.JPEG: self.handle_jpeg,
-            FileType.DOC: self.handle_doc,
-            FileType.GIF: self.handle_gif,
-            FileType.JPG: self.handle_jpg,
-            FileType.PNG: self.handle_png,
-            FileType.TIFF: self.handle_tiff,
-            FileType.TXT: self.handle_txt,
-            FileType.XLSX: self.handle_xlsx,
+    def extract_to_json(self, doc_path: Path, encoding: str = "utf-8") -> dict:
+        file_handlers: Dict[FileType, Callable[[Path, str], dict]] = {
+            FileType.PDF: self._handle_pdf,
+            FileType.BMP: self._handle_bmp,
+            FileType.JPEG: self._handle_jpeg,
+            FileType.DOC: self._handle_doc,
+            FileType.GIF: self._handle_gif,
+            FileType.JPG: self._handle_jpg,
+            FileType.PNG: self._handle_png,
+            FileType.TIFF: self._handle_tiff,
+            FileType.TXT: self._handle_txt,
+            FileType.XLSX: self._handle_xlsx,
         }
 
         handler = file_handlers.get(self.file_type)
-        return handler(doc_path)
+        return handler(doc_path, encoding)
 
-    def handle_pdf(self, doc_path: Path, encoding: str = "utf-8") -> dict:
+    def _handle_pdf(self, doc_path: Path, encoding: str) -> dict:
         doc = pymupdf.open(doc_path)
+        has_text = False
 
         pages = []
         page_num = 0
@@ -64,29 +65,29 @@ class DocExtractor:
         pages_json = {"pages": pages}
         return pages_json
 
-    def handle_bmp(self, doc_path: Path, encoding: str = "utf-8") -> dict:
+    def _handle_bmp(self, doc_path: Path, encoding: str = "utf-8") -> dict:
         return {}
 
-    def handle_jpeg(self, doc_path: Path, encoding: str = "utf-8") -> dict:
+    def _handle_jpeg(self, doc_path: Path, encoding: str = "utf-8") -> dict:
         return {}
 
-    def handle_doc(self, doc_path: Path, encoding: str = "utf-8") -> dict:
+    def _handle_doc(self, doc_path: Path, encoding: str = "utf-8") -> dict:
         return {}
 
-    def handle_gif(self, doc_path: Path, encoding: str = "utf-8") -> dict:
+    def _handle_gif(self, doc_path: Path, encoding: str = "utf-8") -> dict:
         return {}
 
-    def handle_jpg(self, doc_path: Path, encoding: str = "utf-8") -> dict:
+    def _handle_jpg(self, doc_path: Path, encoding: str = "utf-8") -> dict:
         return {}
 
-    def handle_png(self, doc_path: Path, encoding: str = "utf-8") -> dict:
+    def _handle_png(self, doc_path: Path, encoding: str = "utf-8") -> dict:
         return {}
 
-    def handle_tiff(self, doc_path: Path, encoding: str = "utf-8") -> dict:
+    def _handle_tiff(self, doc_path: Path, encoding: str = "utf-8") -> dict:
         return {}
 
-    def handle_txt(self, doc_path: Path, encoding: str = "utf-8") -> dict:
+    def _handle_txt(self, doc_path: Path, encoding: str = "utf-8") -> dict:
         return {}
 
-    def handle_xlsx(self, doc_path: Path, encoding: str = "utf-8") -> dict:
+    def _handle_xlsx(self, doc_path: Path, encoding: str = "utf-8") -> dict:
         return {}
