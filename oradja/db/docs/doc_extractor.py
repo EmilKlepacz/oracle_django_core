@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Dict, Callable
+from typing import Dict, Callable, List
 
 import pymupdf
 
@@ -12,6 +12,16 @@ class DocExtractor:
         if not file_type.has_pymupdf_support:
             raise ValueError(f'No pymupdf support for {file_type.name}')
         self.file_type = file_type
+
+    # Recursively remove specified fields
+    def _remove_json_properties(self, input_json: dict, names_to_remove: List[str]):
+        if isinstance(input_json, dict):
+            return {key: self._remove_json_properties(value, names_to_remove) for key, value in input_json.items() if
+                    key not in names_to_remove}
+        elif isinstance(input_json, list):
+            return [self._remove_json_properties(item, names_to_remove) for item in input_json]
+        else:
+            return input_json
 
     def extract_to_json(self, doc_path: Path, encoding: str = "utf-8") -> dict:
         file_handlers: Dict[FileType, Callable[[Path, str], dict]] = {
